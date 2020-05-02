@@ -2,31 +2,31 @@
 install.packages("e1071")
 library(e1071)
 set.seed(123)
-x <-matrix(rnorm(20*2),ncol=2) # Normal distribution
-y<- c(rep(-1,10),rep(1,10)) # Scatter
+x <- matrix(rnorm(20*2),ncol=2) # Normal distribution
+y <- c(rep(-1,10),rep(1,10)) # Scatter
 x[y==1, ] <-x[y==1, ] +1
 
-plot(x,col=(3-y)) #
+plot(x, col=(3-y)) #
 
-dat <- data.frame(x=x,y=as.factor(y)) # Binary Classification as.factor(y)
-str(dat)
+dataset <- data.frame(x=x,y=as.factor(y)) # Binary Classification as.factor(y)
+str(dataset)
 
-svm_fit <- svm(y ~ ., data=dat, kernel='linear',cost=10 , scale = F) # cost Margin for learning The higher the cost, the wider the margin
+svm_fit <- svm(y ~ ., data=dataset, kernel='linear',cost=10 , scale = F) # cost Margin for learning The higher the cost, the wider the margin
 svm_fit
-plot(svm_fit, dat)
+plot(svm_fit, dataset)
 
 attributes(svm_fit)
 svm_fit$index # Check Vector
 summary(svm_fit)
 
-# Changing Coas
-svm_fit <- svm(y ~ ., data=dat, kernel='linear',cost=0.1 , scale = F) # cost 0.1
-plot(svm_fit,dat)
+# Changing Cost
+svm_fit <- svm(y ~ ., data=dataset, kernel='linear',cost=0.1 , scale = F) # cost 0.1
+plot(svm_fit,dataset)
 svm_fit$index # result: 14
 
 # finding best cost - cross validation tune()
 set.seed(123) # making Random Number
-tune.out <-tune(svm, y ~., data = dat, kernel='linear', range=list(cost=c(0.001,0.01,0.1,1.5,10,50)))
+tune.out <-tune(svm, y ~., data = dataset, kernel='linear', range=list(cost=c(0.001,0.01,0.1,1.5,10,50)))
 summary(tune.out) # best cost = 1.5
 
 bestmod <-tune.out$best.model
